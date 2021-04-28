@@ -8,6 +8,7 @@
     "noImplicitAny": false,
     "target": "es2016",
     "module": "commonjs",
+    "lib": ["es2019"],
     "declaration": true,
     "outDir": "./lib",
     "strict": true,
