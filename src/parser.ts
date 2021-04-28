@@ -12,14 +12,14 @@ import { SP_TIME_TO_ABV, SP_TIME_TO_FULL } from './constants/time';
 import { SP_SCHOOL_ABV_TO_FULL, SP_SCHOOL_ABV_TO_SHORT } from './constants/schools';
 
 class Parser {
-  static _parse_aToB = (abMap: any, a: any, fallback: any = undefined) => {
+  static _parseAToB = (abMap: any, a: any, fallback: any = undefined) => {
     if (a === undefined || a === null) throw new TypeError('undefined or null object passed to parser');
     if (typeof a === 'string') a = a.trim();
     if (abMap[a] !== undefined) return abMap[a];
     return fallback !== undefined ? fallback : a;
   };
 
-  static _parse_bToA = (abMap: any, b: any) => {
+  static _parseBToA = (abMap: any, b: any) => {
     if (b === undefined || b === null) throw new TypeError('undefined or null object passed to parser');
     if (typeof b === 'string') b = b.trim();
     for (const v in abMap) {
@@ -201,7 +201,7 @@ class Parser {
     } else return 0;
   };
 
-  static crToXp = function (cr: any, { isDouble = false } = {}) {
+  static crToXp = (cr: any, { isDouble = false } = {}) => {
     if (cr != null && cr.xp) return Parser._addCommas(`${isDouble ? cr.xp * 2 : cr.xp}`);
 
     const toConvert = cr ? cr.cr || cr : null;
@@ -233,8 +233,8 @@ class Parser {
     }
   };
 
-  static sizeAbvToFull = function (abv: any) {
-    return Parser._parse_aToB(SIZE_ABV_TO_FULL, abv, undefined);
+  static sizeAbvToFull = (abv: any) => {
+    return Parser._parseAToB(SIZE_ABV_TO_FULL, abv, undefined);
   };
 
   static dmgTypeToFull = (dmgType = []) => {
@@ -245,7 +245,7 @@ class Parser {
 
   static senseToExplanation = (senseType: any) => {
     senseType = senseType.toLowerCase();
-    return Parser._parse_aToB(SENSE_JSON_TO_FULL, senseType, ['No explanation available.']);
+    return Parser._parseAToB(SENSE_JSON_TO_FULL, senseType, ['No explanation available.']);
   };
 
   static senseToObject = (senses: any = []) => {
@@ -306,7 +306,7 @@ class Parser {
           }${d.duration.amount} ${d.duration.amount === 1 ? d.duration.type : `${d.duration.type}s`}`;
         case 'permanent': {
           if (d.ends) {
-            const endsToJoin = d.ends.map((m: any) => Parser._parse_aToB(SP_END_TYPE_TO_FULL, m));
+            const endsToJoin = d.ends.map((m: any) => Parser._parseAToB(SP_END_TYPE_TO_FULL, m));
             hasSubOr = hasSubOr || endsToJoin.length > 1;
             return `Until ${endsToJoin.joinConjunct(', ', ' or ')}`;
           } else {
@@ -322,10 +322,10 @@ class Parser {
     const text = time.map((timeItem: any) => {
       return {
         full: `${timeItem.number} ${
-          !_.isEmpty(timeItem.unit) ? Parser._parse_aToB(SP_TIME_TO_FULL, timeItem.unit) : ''
+          !_.isEmpty(timeItem.unit) ? Parser._parseAToB(SP_TIME_TO_FULL, timeItem.unit) : ''
         }`,
         short: `${timeItem.number} ${
-          !_.isEmpty(timeItem.unit) ? Parser._parse_aToB(SP_TIME_TO_ABV, timeItem.unit) : ''
+          !_.isEmpty(timeItem.unit) ? Parser._parseAToB(SP_TIME_TO_ABV, timeItem.unit) : ''
         }`,
       };
     });
@@ -340,13 +340,13 @@ class Parser {
   };
 
   static spSchool = (school: any) => {
-    return Parser._parse_aToB(SP_SCHOOL_ABV_TO_FULL, school);
+    return Parser._parseAToB(SP_SCHOOL_ABV_TO_FULL, school);
   };
 
   static spSubschools = (subschools = []) => {
     return subschools
       .map((school) => {
-        return Parser._parse_aToB(SP_SCHOOL_ABV_TO_FULL, school);
+        return Parser._parseAToB(SP_SCHOOL_ABV_TO_FULL, school);
       })
       .filter((x) => !!x);
   };

@@ -1,7 +1,7 @@
 import './utils';
 declare class Parser {
-    static _parse_aToB: (abMap: any, a: any, fallback?: any) => any;
-    static _parse_bToA: (abMap: any, b: any) => any;
+    static _parseAToB: (abMap: any, a: any, fallback?: any) => any;
+    static _parseBToA: (abMap: any, b: any) => any;
     static _addCommas: (intNum: string) => string;
     static getSpeedString: (it: any) => any;
     static alignmentAbvToFull: (alignment: any) => any;
