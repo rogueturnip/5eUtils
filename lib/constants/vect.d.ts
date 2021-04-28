@@ -1,0 +1,22 @@
+export declare const VeCt: {
+    STR_NONE: string;
+    STR_SEE_CONSOLE: string;
+    HASH_SCALED: string;
+    FILTER_BOX_SUB_HASH_SEARCH_PREFIX: string;
+    JSON_HOMEBREW_INDEX: string;
+    STORAGE_HOMEBREW: string;
+    STORAGE_HOMEBREW_META: string;
+    STORAGE_EXCLUDES: string;
+    STORAGE_DMSCREEN: string;
+    STORAGE_DMSCREEN_TEMP_SUBLIST: string;
+    STORAGE_ROLLER_MACRO: string;
+    STORAGE_ENCOUNTER: string;
+    STORAGE_POINTBUY: string;
+    DUR_INLINE_NOTIFY: number;
+    PG_NONE: string;
+    SYM_UI_SKIP: symbol;
+    LOC_ORIGIN_CANCER: string;
+    STR_NO_ATTUNEMENT: string;
+    CR_UNKNOWN: number;
+    CR_CUSTOM: number;
+};

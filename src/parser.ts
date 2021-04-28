@@ -9,23 +9,18 @@ import { SENSE_JSON_TO_FULL } from './constants/senses';
 import { OFFICIAL_SOURCES } from './constants/sources';
 import { SP_END_TYPE_TO_FULL } from './constants/duration';
 import { SP_TIME_TO_ABV, SP_TIME_TO_FULL } from './constants/time';
-import {
-  SP_SCHOOL_ABV_TO_FULL,
-  SP_SCHOOL_ABV_TO_SHORT,
-} from './constants/schools';
+import { SP_SCHOOL_ABV_TO_FULL, SP_SCHOOL_ABV_TO_SHORT } from './constants/schools';
 
 class Parser {
-  static _parse_aToB = (abMap, a, fallback = undefined) => {
-    if (a === undefined || a === null)
-      throw new TypeError('undefined or null object passed to parser');
+  static _parse_aToB = (abMap: any, a: any, fallback: any = undefined) => {
+    if (a === undefined || a === null) throw new TypeError('undefined or null object passed to parser');
     if (typeof a === 'string') a = a.trim();
     if (abMap[a] !== undefined) return abMap[a];
     return fallback !== undefined ? fallback : a;
   };
 
-  static _parse_bToA = (abMap, b) => {
-    if (b === undefined || b === null)
-      throw new TypeError('undefined or null object passed to parser');
+  static _parse_bToA = (abMap: any, b: any) => {
+    if (b === undefined || b === null) throw new TypeError('undefined or null object passed to parser');
     if (typeof b === 'string') b = b.trim();
     for (const v in abMap) {
       if (!abMap.hasOwnProperty(v)) continue;
@@ -34,37 +29,31 @@ class Parser {
     return b;
   };
 
-  static _addCommas = (intNum) => {
+  static _addCommas = (intNum: string): string => {
     return `${intNum}`.replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   };
 
-  static getSpeedString = (it) => {
+  static getSpeedString = (it: any) => {
     if (it.speed == null) return '\u2014';
 
-    function procSpeed(propName) {
-      function addSpeed(s) {
-        stack.push(
-          `${propName === 'walk' ? '' : `${propName} `}${getVal(
-            s,
-          )} ft.${getCond(s)}`,
-        );
+    function procSpeed(propName: string) {
+      function addSpeed(s: any) {
+        stack.push(`${propName === 'walk' ? '' : `${propName} `}${getVal(s)} ft.${getCond(s)}`);
       }
 
-      if (it.speed[propName] || propName === 'walk')
-        addSpeed(it.speed[propName] || 0);
-      if (it.speed.alternate && it.speed.alternate[propName])
-        it.speed.alternate[propName].forEach(addSpeed);
+      if (it.speed[propName] || propName === 'walk') addSpeed(it.speed[propName] || 0);
+      if (it.speed.alternate && it.speed.alternate[propName]) it.speed.alternate[propName].forEach(addSpeed);
     }
 
-    function getVal(speedProp) {
+    function getVal(speedProp: any) {
       return speedProp.number != null ? speedProp.number : speedProp;
     }
 
-    function getCond(speedProp) {
+    function getCond(speedProp: any) {
       return speedProp.condition ? ` ${speedProp.condition}` : '';
     }
 
-    const stack = [];
+    const stack: any = [];
     if (typeof it.speed === 'object') {
       let joiner = ', ';
       procSpeed('walk');
@@ -75,9 +64,9 @@ class Parser {
       if (it.speed.choose) {
         joiner = '; ';
         stack.push(
-          `${it.speed.choose.from.sort().joinConjunct(', ', ' or ')} ${
-            it.speed.choose.amount
-          } ft.${it.speed.choose.note ? ` ${it.speed.choose.note}` : ''}`,
+          `${it.speed.choose.from.sort().joinConjunct(', ', ' or ')} ${it.speed.choose.amount} ft.${
+            it.speed.choose.note ? ` ${it.speed.choose.note}` : ''
+          }`,
         );
       }
       return stack.join(joiner);
@@ -94,11 +83,9 @@ class Parser {
         return alignment.special;
       } else {
         // e.g. `{alignment: ["N", "G"], chance: 50}` or `{alignment: ["N", "G"]}`
-        return `${alignment.alignment
-          .map((a) => Parser.alignmentAbvToFull(a))
-          .join(' ')}${alignment.chance ? ` (${alignment.chance}%)` : ''}${
-          alignment.note ? ` (${alignment.note})` : ''
-        }`;
+        return `${alignment.alignment.map((a: any) => Parser.alignmentAbvToFull(a)).join(' ')}${
+          alignment.chance ? ` (${alignment.chance}%)` : ''
+        }${alignment.note ? ` (${alignment.note})` : ''}`;
       }
     } else {
       alignment = alignment.toUpperCase();
@@ -127,7 +114,7 @@ class Parser {
     }
   };
 
-  static acToFull = (ac) => {
+  static acToFull = (ac: any) => {
     if (typeof ac === 'string') return ac; // handle classic format
 
     let stack = '';
@@ -160,7 +147,7 @@ class Parser {
 
           inBraces = true;
 
-          stack += cur.from.map((it) => it).join(', ');
+          stack += cur.from.map((it: any) => it).join(', ');
 
           if (cur.braces) {
             stack += ')';
@@ -198,9 +185,8 @@ class Parser {
     });
   };
 
-  static crToNumber = (cr) => {
-    if (cr === 'Unknown' || cr === '\u2014' || cr == null)
-      return VeCt.CR_UNKNOWN;
+  static crToNumber = (cr: any): number => {
+    if (cr === 'Unknown' || cr === '\u2014' || cr == null) return VeCt.CR_UNKNOWN;
     if (cr.cr) return Parser.crToNumber(cr.cr);
     if (cr.coven) return Parser.crToNumber(cr.coven);
 
@@ -215,19 +201,17 @@ class Parser {
     } else return 0;
   };
 
-  static crToXp = function (cr, { isDouble = false } = {}) {
-    if (cr != null && cr.xp)
-      return Parser._addCommas(`${isDouble ? cr.xp * 2 : cr.xp}`);
+  static crToXp = function (cr: any, { isDouble = false } = {}) {
+    if (cr != null && cr.xp) return Parser._addCommas(`${isDouble ? cr.xp * 2 : cr.xp}`);
 
     const toConvert = cr ? cr.cr || cr : null;
-    if (toConvert === 'Unknown' || toConvert == null || !XP_CHART_ALT)
-      return 'Unknown';
+    if (toConvert === 'Unknown' || toConvert == null || !XP_CHART_ALT) return 'Unknown';
     if (toConvert === '0') return '0 or 10';
     const xp = XP_CHART_ALT[toConvert];
     return Parser._addCommas(`${isDouble ? 2 * xp : xp}`);
   };
 
-  static monCrToFull = function (cr, { xp = null, isMythic = false } = {}) {
+  static monCrToFull = (cr: any, { xp = '', isMythic = false } = {}): any => {
     if (cr == null) return '';
 
     if (typeof cr === 'string') {
@@ -242,16 +226,14 @@ class Parser {
           : ''
       })`;
     } else {
-      const stack = [Parser.monCrToFull(cr.cr, { xp: cr.xp, isMythic })];
-      if (cr.lair)
-        stack.push(`${Parser.monCrToFull(cr.lair)} when encountered in lair`);
-      if (cr.coven)
-        stack.push(`${Parser.monCrToFull(cr.coven)} when part of a coven`);
+      const stack: any = [Parser.monCrToFull(cr.cr, { xp: cr.xp, isMythic })];
+      if (cr.lair) stack.push(`${Parser.monCrToFull(cr.lair)} when encountered in lair`);
+      if (cr.coven) stack.push(`${Parser.monCrToFull(cr.coven)} when part of a coven`);
       return stack.joinConjunct(', ', ' or ');
     }
   };
 
-  static sizeAbvToFull = function (abv) {
+  static sizeAbvToFull = function (abv: any) {
     return Parser._parse_aToB(SIZE_ABV_TO_FULL, abv, undefined);
   };
 
@@ -261,34 +243,32 @@ class Parser {
     });
   };
 
-  static senseToExplanation = (senseType) => {
+  static senseToExplanation = (senseType: any) => {
     senseType = senseType.toLowerCase();
-    return Parser._parse_aToB(SENSE_JSON_TO_FULL, senseType, [
-      'No explanation available.',
-    ]);
+    return Parser._parse_aToB(SENSE_JSON_TO_FULL, senseType, ['No explanation available.']);
   };
 
-  static senseToObject = (senses = []) => {
-    return senses.map((sense) => {
+  static senseToObject = (senses: any = []) => {
+    return senses.map((sense: any) => {
       return {
         [sense]: Parser.senseToExplanation(sense.split(' ')[0]),
       };
     });
   };
 
-  static getOfficialSpellClass = (classList = []) => {
+  static getOfficialSpellClass = (classList: any = []) => {
     if (_.isEmpty(classList)) return [];
-    const officials = classList.map((classItem) => {
+    const officials = classList.map((classItem: any) => {
       if (Object.keys(OFFICIAL_SOURCES).includes(classItem.source)) {
         return `{@class ${classItem.name.toLowerCase()}|${classItem.source.toLowerCase()}}`;
       }
     });
-    return officials.filter((x) => !!x);
+    return officials.filter((x: any) => !!x);
   };
 
-  static getOfficialSpellSubclass = (classList = []) => {
+  static getOfficialSpellSubclass = (classList: any = []) => {
     if (_.isEmpty(classList)) return [];
-    const officials = classList.map((classItem) => {
+    const officials = classList.map((classItem: any) => {
       if (
         Object.keys(OFFICIAL_SOURCES).includes(classItem.class?.source) &&
         Object.keys(OFFICIAL_SOURCES).includes(classItem.subclass?.source)
@@ -299,47 +279,34 @@ class Parser {
         );
       }
     });
-    return officials.filter((x) => !!x);
+    return officials.filter((x: any) => !!x);
   };
 
-  static spComponentsToFull = (comp, level) => {
+  static spComponentsToFull = (comp: any, level: any) => {
     if (!comp) return 'None';
-    const out = [];
+    const out: any = [];
     if (comp.v) out.push('V');
     if (comp.s) out.push('S');
-    if (comp.m != null)
-      out.push(
-        `M${
-          comp.m !== true
-            ? ` (${comp.m.text != null ? comp.m.text : comp.m})`
-            : ''
-        }`,
-      );
+    if (comp.m != null) out.push(`M${comp.m !== true ? ` (${comp.m.text != null ? comp.m.text : comp.m})` : ''}`);
     if (comp.r) out.push(`R (${level} gp)`);
     return out || ['None'];
   };
 
-  static spDurationToFull = (dur) => {
+  static spDurationToFull = (dur: any) => {
     let hasSubOr = false;
-    const outParts = dur.map((d) => {
+    const outParts = dur.map((d: any) => {
       switch (d.type) {
         case 'special':
           return 'Special';
         case 'instant':
           return `Instantaneous${d.condition ? ` (${d.condition})` : ''}`;
         case 'timed':
-          return `${d.concentration ? 'Concentration, ' : ''}${
-            d.concentration ? 'u' : d.duration.upTo ? 'U' : ''
-          }${d.concentration || d.duration.upTo ? 'p to ' : ''}${
-            d.duration.amount
-          } ${
-            d.duration.amount === 1 ? d.duration.type : `${d.duration.type}s`
-          }`;
+          return `${d.concentration ? 'Concentration, ' : ''}${d.concentration ? 'u' : d.duration.upTo ? 'U' : ''}${
+            d.concentration || d.duration.upTo ? 'p to ' : ''
+          }${d.duration.amount} ${d.duration.amount === 1 ? d.duration.type : `${d.duration.type}s`}`;
         case 'permanent': {
           if (d.ends) {
-            const endsToJoin = d.ends.map((m) =>
-              Parser._parse_aToB(SP_END_TYPE_TO_FULL, m),
-            );
+            const endsToJoin = d.ends.map((m: any) => Parser._parse_aToB(SP_END_TYPE_TO_FULL, m));
             hasSubOr = hasSubOr || endsToJoin.length > 1;
             return `Until ${endsToJoin.joinConjunct(', ', ' or ')}`;
           } else {
@@ -348,23 +315,17 @@ class Parser {
         }
       }
     });
-    return `${outParts.joinConjunct(hasSubOr ? '; ' : ', ', ' or ')}${
-      dur.length > 1 ? ' (see below)' : ''
-    }`;
+    return `${outParts.joinConjunct(hasSubOr ? '; ' : ', ', ' or ')}${dur.length > 1 ? ' (see below)' : ''}`;
   };
 
-  static spTime = (time) => {
-    const text = time.map((timeItem) => {
+  static spTime = (time: any) => {
+    const text = time.map((timeItem: any) => {
       return {
         full: `${timeItem.number} ${
-          !_.isEmpty(timeItem.unit)
-            ? Parser._parse_aToB(SP_TIME_TO_FULL, timeItem.unit)
-            : ''
+          !_.isEmpty(timeItem.unit) ? Parser._parse_aToB(SP_TIME_TO_FULL, timeItem.unit) : ''
         }`,
         short: `${timeItem.number} ${
-          !_.isEmpty(timeItem.unit)
-            ? Parser._parse_aToB(SP_TIME_TO_ABV, timeItem.unit)
-            : ''
+          !_.isEmpty(timeItem.unit) ? Parser._parse_aToB(SP_TIME_TO_ABV, timeItem.unit) : ''
         }`,
       };
     });
@@ -374,11 +335,11 @@ class Parser {
     };
   };
 
-  static spRange = (range) => {
+  static spRange = (range: any) => {
     return range;
   };
 
-  static spSchool = (school) => {
+  static spSchool = (school: any) => {
     return Parser._parse_aToB(SP_SCHOOL_ABV_TO_FULL, school);
   };
 
