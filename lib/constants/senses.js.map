@@ -1,1 +1,1 @@
-{"version":3,"file":"senses.js","sourceRoot":"","sources":["../../src/constants/senses.ts"],"names":[],"mappings":";;;AAAa,QAAA,kBAAkB,GAAG;IAC9B,YAAY,EAAE;QACV,2PAA2P;KAC9P;IACD,YAAY,EAAE;QACV,wZAAwZ;KAC3Z;IACD,aAAa,EAAE;QACX,+WAA+W;KAClX;IACD,WAAW,EAAE;QACT,4WAA4W;KAC/W;CACJ,CAAC"}
+{"version":3,"file":"senses.js","sourceRoot":"","sources":["../../src/constants/senses.ts"],"names":[],"mappings":";;;AAAa,QAAA,kBAAkB,GAAG;IAChC,UAAU,EAAE;QACV,2PAA2P;KAC5P;IACD,UAAU,EAAE;QACV,wZAAwZ;KACzZ;IACD,WAAW,EAAE;QACX,+WAA+W;KAChX;IACD,SAAS,EAAE;QACT,4WAA4W;KAC7W;CACF,CAAC"}

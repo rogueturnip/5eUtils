@@ -3,6 +3,8 @@ declare class Parser {
     static _parseAToB: (abMap: any, a: any, fallback?: any) => any;
     static _parseBToA: (abMap: any, b: any) => any;
     static _addCommas: (intNum: string) => string;
+    static getFullSource: (source: any) => any;
+    static getCreatureType: (creatureType: any) => any;
     static getSpeedString: (it: any) => any;
     static alignmentAbvToFull: (alignment: any) => any;
     static acToFull: (ac: any) => string;

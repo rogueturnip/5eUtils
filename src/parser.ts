@@ -33,6 +33,24 @@ class Parser {
     return `${intNum}`.replace(/(\d)(?=(\d{3})+$)/g, '$1,');
   };
 
+  static getFullSource = (source: any): any => {
+    if (source && source.source) return Parser._parseAToB(OFFICIAL_SOURCES, source.source);
+    return Parser._parseAToB(OFFICIAL_SOURCES, source);
+  };
+
+  static getCreatureType = (creatureType: any): any => {
+    if (creatureType && creatureType.type) {
+      return {
+        name: creatureType.type,
+        swarmSize: creatureType.swarmSize || null,
+      };
+    }
+    return {
+      name: creatureType,
+      swarmSize: null,
+    };
+  };
+
   static getSpeedString = (it: any) => {
     if (it.speed == null) return '\u2014';
 
@@ -217,7 +235,7 @@ class Parser {
     if (typeof cr === 'string') {
       if (Parser.crToNumber(cr) >= VeCt.CR_CUSTOM) return cr;
 
-      xp = xp != null ? Parser._addCommas(xp) : Parser.crToXp(cr);
+      xp = xp != '' ? Parser._addCommas(xp) : Parser.crToXp(cr);
       return `${cr} (${xp} XP${
         isMythic
           ? `, or ${Parser.crToXp(cr, {

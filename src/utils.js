@@ -9,10 +9,7 @@ Array.prototype.joinConjunct =
       for (let i = 0; i < this.length; ++i) {
         outStr += this[i];
         if (i < this.length - 2) outStr += joiner;
-        else if (i === this.length - 2)
-          outStr += `${
-            !nonOxford && this.length > 2 ? joiner.trim() : ''
-          }${lastJoiner}`;
+        else if (i === this.length - 2) outStr += `${!nonOxford && this.length > 2 ? joiner.trim() : ''}${lastJoiner}`;
       }
       return outStr;
     }
