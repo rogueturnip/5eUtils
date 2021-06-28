@@ -56,7 +56,8 @@ class Parser {
 
     function procSpeed(propName: string) {
       function addSpeed(s: any) {
-        stack.push(`${propName === 'walk' ? '' : `${propName} `}${getVal(s)} ft.${getCond(s)}`);
+        // stack.push(`${propName === 'walk' ? '' : `${propName} `}${getVal(s)} ft.${getCond(s)}`);
+        stack.push(`${propName} ${getVal(s)} ft.${getCond(s)}`);
       }
 
       if (it.speed[propName] || propName === 'walk') addSpeed(it.speed[propName] || 0);
