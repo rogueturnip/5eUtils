@@ -253,6 +253,7 @@ class Parser {
   };
 
   static sizeAbvToFull = (abv: any) => {
+    if (_.isEmpty(abv)) return 'unknown';
     return Parser._parseAToB(SIZE_ABV_TO_FULL, abv, undefined);
   };
 
